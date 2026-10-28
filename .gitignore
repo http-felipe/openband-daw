@@ -1,0 +1,60 @@
+# Dependencies & build output
+node_modules/
+dist/
+out/
+release/
+*.tsbuildinfo
+coverage/
+
+# Logs, env, OS/editor noise
+*.log
+npm-debug.log*
+.env
+.env.*
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Reverse-engineering / inspection artifacts (REA, Hopper, Ghidra) — never commit
+rea-*/
+.rea/
+*.rea.json
+evidence/
+evidence-bundles/
+analysis/
+analysis-dumps/
+inspection/
+*.snapshot
+*.hop
+*.gpr
+*.rep/
+*.dump
+*.bin
+
+# Third-party proprietary content — never commit
+*.band/
+*.band
+*.gbProj
+*.logicx
+*.exs
+*.SDIR
+*.sdir
+*.pst
+*.cst
+*.patch/
+*.caf
+*.aif
+*.aiff
+*.nib
+*.car
+*.icns
+
+# User audio & project files (keep the repo source-only)
+*.wav
+*.mp3
+*.m4a
+*.flac
+*.obproj.json
+!examples/**/*.obproj.json

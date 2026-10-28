@@ -1,0 +1,75 @@
+# Builds desktop installers on Windows, macOS and Linux and attaches them to a *draft* GitHub Release.
+# Trigger: push a tag matching the version in package.json, e.g.
+#   git tag v0.1.0 && git push origin v0.1.0
+# Review the draft on GitHub (Releases), then press "Publish release".
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch: # manual run: builds the installers as workflow artifacts, without a release
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: --win
+          - os: macos-latest
+            target: --mac
+          - os: ubuntu-latest
+            target: --linux
+    runs-on: ${{ matrix.os }}
+    env:
+      # No signing certificates: never let electron-builder pick one up from the runner.
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+
+      - name: Smoke-test the desktop app on this OS
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            xvfb-run -a npx electron . --smoke-test --no-sandbox
+          else
+            npx electron . --smoke-test
+          fi
+
+      - name: Build installers
+        run: npx electron-builder ${{ matrix.target }} --publish never
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installers-${{ runner.os }}
+          path: |
+            release/*.exe
+            release/*.dmg
+            release/*.AppImage
+          if-no-files-found: error
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: installers
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          generate_release_notes: true
+          files: installers/*

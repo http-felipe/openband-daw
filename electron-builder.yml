@@ -1,0 +1,52 @@
+# Desktop installers. Build for the current OS with `npm run dist`, or one OS with dist:win / dist:mac / dist:linux.
+# Releases for all three are built by .github/workflows/release.yml when a v* tag is pushed.
+appId: org.openband.daw
+productName: OpenBand DAW
+copyright: Copyright © 2026 OpenBand DAW contributors
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - dist/**/*
+  - electron/**/*
+  - package.json
+asar: true
+artifactName: OpenBand-DAW-${version}-${os}-${arch}.${ext}
+afterPack: scripts/adhoc-sign.cjs
+
+mac:
+  category: public.app-category.music
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+  # No paid developer certificate: skip electron-builder's signing (and never pick up a personal certificate from
+  # the keychain); scripts/adhoc-sign.cjs applies an ad-hoc signature instead, which arm64 Macs require.
+  identity: null
+  hardenedRuntime: false
+  extendInfo:
+    NSMicrophoneUsageDescription: OpenBand uses your audio interface or microphone to monitor and record instruments.
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  artifactName: OpenBand-DAW-Setup-${version}-${arch}.${ext}
+
+portable:
+  artifactName: OpenBand-DAW-Portable-${version}-${arch}.${ext}
+
+linux:
+  category: AudioVideo
+  target:
+    - target: AppImage
+      arch: [x64]
+
+publish: null

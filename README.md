@@ -4,11 +4,7 @@
 
 https://github.com/user-attachments/assets/04b794ce-3b1e-41b3-a495-dfae4dd66d8b
 
-<p align="center">
-  <a href="docs/openband-daw-demo.mp4?raw=true"><img src="docs/openband-daw-demo.jpg" alt="OpenBand DAW demo: arranging synth tracks and recording a guitar through the amp simulator" width="820"></a>
-  <br>
-  <sub>40-second demo: synth tracks, the piano roll and a live guitar take through the amp simulator. <a href="https://github.com/http-felipe/openband-daw/releases/latest">Download the latest release</a>.</sub>
-</p>
+<p align="center"><sub>40-second demo: synth tracks, the piano roll and a live guitar take through the amp simulator (<a href="docs/openband-daw-demo.mp4">docs/openband-daw-demo.mp4</a>). <a href="https://github.com/http-felipe/openband-daw/releases/latest">Download the latest release</a>.</sub></p>
 
 OpenBand lets you sketch and record music: arrange tracks on a timeline, play and edit synthesised instruments, run a guitar through an amp simulator and export the result to WAV. It is written in TypeScript on top of the Web Audio API and AudioWorklets, runs in any modern browser, and ships as a desktop app for Windows, macOS and Linux via Electron.
 
